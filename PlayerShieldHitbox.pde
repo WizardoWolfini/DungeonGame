@@ -1,0 +1,3 @@
+class PlayerShieldHitbox extends GameObject{
+
+}
