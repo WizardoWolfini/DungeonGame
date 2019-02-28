@@ -8,6 +8,7 @@ class Sword extends GameObject {
   private boolean startSwing = false;
   private boolean startWhirl = false;
   private int onWCd = 0;
+  private int combo = 0;
   Sword(int intDamage, int intLength, int intDurability, int sS, int myX, int myY) {
     swingSpeed = sS;
     myDamage = intDamage;
@@ -33,12 +34,34 @@ class Sword extends GameObject {
     return myDamage;
   }
   public void Swing() {
-    if (startSwing) {
+    if (startSwing == false) {
+      combo = 0;
+    }
+    if (startSwing && combo == 2) {
+      if (swing == 0) {
+        swing = 1;
+        for (GameObject part : playerOne.getParts()) {
+          part.setDirectionX(part.getDirectionX() + 10 *Math.cos(myPointDirection * Math.PI/180));
+          part.setDirectionY(part.getDirectionY() +10 *Math.sin(myPointDirection * Math.PI/180));
+        }
+      } else if (swing == 1) {
+        swingStage -= swingSpeed*3;
+        if (swingStage <= -180) {
+          swing = 2;
+          swingStage = -90;
+        }
+      } else if (swing == 2) {
+        swing = 0;
+        swingStage = 0;
+        combo = 0;
+        startSwing = false;
+      }
+    } else if (startSwing && combo == 1) {
       turn(swingStage);
       if (swing == 0) {
         swingStage += swingSpeed/2;
-        if (swingStage >= 15) {
-          swingStage = 15;
+        if (swingStage >= 45) {
+          swingStage = 45;
           swing = 1;
         }
       } else if (swing == 1) {
@@ -52,6 +75,31 @@ class Sword extends GameObject {
         if (swingStage >= 0) {
           swing = 0;
           swingStage = 0;
+          combo = 2;
+          startSwing = false;
+        }
+      }
+    } else if (startSwing) {
+      turn(swingStage);
+      if (swing == 0) {
+        swingStage += swingSpeed/2;
+        if (swingStage >= 15) {
+          swingStage = 15;
+          swing = 1;
+        }
+      } else if (swing == 1) {
+        swingStage -= swingSpeed*3;
+        if (swingStage <= -45) {
+          swing = 2;
+          swingStage = -45;
+        }
+      }
+      if (swing == 2) {
+        swingStage += swingSpeed;
+        if (swingStage >= 0) {
+          swing = 0;
+          swingStage = 0;
+          combo = 1;
           startSwing = false;
         }
       }
@@ -91,5 +139,8 @@ class Sword extends GameObject {
   }
   public int checkSwing() {
     return swing;
+  }
+  public boolean checkSwingB() {
+    return startSwing;
   }
 }

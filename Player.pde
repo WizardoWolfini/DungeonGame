@@ -53,11 +53,14 @@ class Player {
   public void Swing() {
     mySword.Swing();
   }
-  public void StartWhirlWind(){
+  public void StartWhirlWind() {
     mySword.StartWhirlWind();
   }
   public int checkSwing() {
     return mySword.checkSwing();
+  }
+  public boolean checkSwingB() {
+    return mySword.checkSwingB();
   }
   public Sword getSword() {
     return mySword;

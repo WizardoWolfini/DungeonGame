@@ -12,7 +12,7 @@ class Section {
       createWall(1915, 620, 1915, 1080);
       createWall(0, 5, 860, 5);
       createWall(1040, 5, 1920, 5);
-      createMessage("Press 'E' to open the chest", 50, 400);
+      createMessage("Attack to open the chest and 'E' to equip", 50, 400);
       Chest newchest;
       newchest = new Chest(new Shield(1, 10, 25, 500, 500), new Sword(3, 50, 250, 5, 500, 500), 100, 450);
       Chests.add(newchest);

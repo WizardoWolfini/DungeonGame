@@ -96,6 +96,27 @@ class GameObject
       myDirectionY = -3;
     }
   }
+    public void accelerateangle (double dAmount, int degree,boolean t) {
+      if(t){
+    double dRadians =(degree)*(Math.PI/180); 
+    myDirectionX += ((dAmount) *  4 * Math.cos(dRadians));
+    myDirectionY += ((dAmount) * 4 * Math.sin(dRadians));
+    if (myDirectionX > 6) {
+      myDirectionX = 6;
+    }
+    if (myDirectionX < -6) {
+      myDirectionX = -6;
+    }
+    if (myDirectionY > 6) {
+      myDirectionY = 6;
+    }
+    if (myDirectionY < -6) {
+      myDirectionY = -6;
+    }
+      }else{
+      accelerateangle(dAmount, degree);
+      }
+  }
   public void turn (int nDegreesOfRotation)   
   {     
     //rotates the floater by a given number of degrees    
