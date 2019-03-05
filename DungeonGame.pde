@@ -2,6 +2,7 @@ boolean wKey = false;
 boolean aKey = false;
 boolean dKey = false;
 boolean sKey = false;
+boolean qKey = false;
 boolean spaceKey = false;
 boolean ctrlKey = false;
 ArrayList<ArrayList<Section>> Sections = new ArrayList<ArrayList<Section>>();
@@ -46,8 +47,10 @@ void draw() {
     }
   }
   if (spaceKey) {
-    //  playerOne.StartWhirlWind();
     playerOne.StartSwing();
+  }
+  if (qKey) {
+    playerOne.StartWhirlWind();
   }
   if (playerOne.getY() - mouseY >= 0) {
     angleR = 180 + angletemp *180/Math.PI;
@@ -237,6 +240,9 @@ void keyPressed() {
   if (key == 'w' || key == 'W') {
     wKey = true;
   }
+  if (key == 'q' || key == 'Q') {
+    qKey = true;
+  }
   if (key == 'e' || key == 'E') {
     for (CustomItemDropInterface item : currentSection.getItems()) {
       if (dist(playerOne.getX(), playerOne.getY(), item.getX(), item.getY()) < 35) {
@@ -282,6 +288,9 @@ void keyReleased() {
   }
   if (key == 'w' || key == 'W') {
     wKey = false;
+  }
+  if (key == 'q' || key == 'Q') {
+    qKey = false;
   }
   if (key == ' ') {
     spaceKey = false;

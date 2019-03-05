@@ -41,16 +41,20 @@ class Sword extends GameObject {
       if (swing == 0) {
         swing = 1;
         for (GameObject part : playerOne.getParts()) {
+          //part.accelerate(10);
           part.setDirectionX(part.getDirectionX() + 10 *Math.cos(myPointDirection * Math.PI/180));
           part.setDirectionY(part.getDirectionY() +10 *Math.sin(myPointDirection * Math.PI/180));
         }
       } else if (swing == 1) {
-        swingStage -= swingSpeed*3;
+        swingStage -= 10;
         if (swingStage <= -180) {
           swing = 2;
-          swingStage = -90;
         }
       } else if (swing == 2) {
+        for (GameObject part : playerOne.getParts()) {
+          part.setDirectionX(5 *Math.cos(myPointDirection * Math.PI/180));
+          part.setDirectionY(5 *Math.sin(myPointDirection * Math.PI/180));
+        }
         swing = 0;
         swingStage = 0;
         combo = 0;
@@ -61,6 +65,10 @@ class Sword extends GameObject {
       if (swing == 0) {
         swingStage += swingSpeed/2;
         if (swingStage >= 45) {
+          for (GameObject part : playerOne.getParts()) {
+            part.setDirectionX(part.getDirectionX() + 2 *Math.cos(myPointDirection * Math.PI/180));
+            part.setDirectionY(part.getDirectionY() +2 *Math.sin(myPointDirection * Math.PI/180));
+          }
           swingStage = 45;
           swing = 1;
         }
@@ -86,6 +94,10 @@ class Sword extends GameObject {
         if (swingStage >= 15) {
           swingStage = 15;
           swing = 1;
+          for (GameObject part : playerOne.getParts()) {
+            part.setDirectionX(part.getDirectionX() + 2 *Math.cos(myPointDirection * Math.PI/180));
+            part.setDirectionY(part.getDirectionY() +2 *Math.sin(myPointDirection * Math.PI/180));
+          }
         }
       } else if (swing == 1) {
         swingStage -= swingSpeed*3;
@@ -119,14 +131,16 @@ class Sword extends GameObject {
       }
     }
     if (onWCd > 0) {
-      onWCd--;
+      onWCd-= swingSpeed;
+    }else{
+    onWCd = 0;
     }
   }
   public void StartWhirlWind() {
     if (onWCd == 0) {
       startWhirl = true;
       swing = 1;
-      onWCd = 360;
+      onWCd = 180;
     }
   }
   public int getSwordSize() {
