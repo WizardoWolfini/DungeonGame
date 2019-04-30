@@ -36,7 +36,7 @@ class GameDoor extends GameWall {
       }
     } else {
       if (opening) {
-        if (myCenterY < maxOpen) {
+        if (myCenterX < maxOpen) {
           myCenterX += myLength/20;
         } else {
           myCenterX = maxOpen;

@@ -84,16 +84,16 @@ class GameObject
     myDirectionX += ((dAmount) * Math.cos(dRadians));
     myDirectionY += ((dAmount) * Math.sin(dRadians));
     if (myDirectionX > 3) {
-      myDirectionX = 3;
+      myDirectionX -= .5 + Math.abs((dAmount) * Math.cos(dRadians));
     }
     if (myDirectionX < -3) {
-      myDirectionX = -3;
+      myDirectionX += .5 + Math.abs((dAmount) * Math.cos(dRadians));
     }
     if (myDirectionY > 3) {
-      myDirectionY = 3;
+      myDirectionY -= .5 + Math.abs((dAmount) * Math.sin(dRadians));
     }
     if (myDirectionY < -3) {
-      myDirectionY = -3;
+      myDirectionY += .5 + Math.abs((dAmount) * Math.sin(dRadians));
     }
   }
     public void accelerateangle (double dAmount, int degree,boolean t) {
@@ -102,16 +102,16 @@ class GameObject
     myDirectionX += ((dAmount) *  4 * Math.cos(dRadians));
     myDirectionY += ((dAmount) * 4 * Math.sin(dRadians));
     if (myDirectionX > 6) {
-      myDirectionX = 6;
+      myDirectionX -= .5 + Math.abs((dAmount) * Math.cos(dRadians));
     }
     if (myDirectionX < -6) {
-      myDirectionX = -6;
+      myDirectionX += .5 + Math.abs((dAmount) * Math.cos(dRadians));
     }
     if (myDirectionY > 6) {
-      myDirectionY = 6;
+      myDirectionY -= .5 + Math.abs((dAmount) * Math.sin(dRadians));
     }
     if (myDirectionY < -6) {
-      myDirectionY = -6;
+      myDirectionY += .5 + Math.abs((dAmount) * Math.sin(dRadians));
     }
       }else{
       accelerateangle(dAmount, degree);

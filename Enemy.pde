@@ -44,13 +44,14 @@ class Enemy extends GameObject {
   return alive;
   }
   public void takeDamage(int damage) {
-    if (canTakeDamage) {
       myHpBar.damage(damage);
       if (myHpBar.getHp() <= 0) {
         alive = false;
       }
       canTakeDamage = false;
-    }
+  }
+  public boolean checkTakeDamage(){
+  return canTakeDamage;
   }
   public void move() {
     myHpBar.move((float)myDirectionX, (float)myDirectionY);

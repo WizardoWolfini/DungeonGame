@@ -15,18 +15,22 @@ class ShieldItemDrop implements CustomItemDropInterface {
     float dRadians = (float)(myPointDirection*(Math.PI/180));
     rotate(dRadians);
     noFill();
-    rect(-13, -13, 26, 26);
+    //rect(-13, -13, 26, 26);
     fill(0);
-   beginShape();
+    beginShape();
     vertex(-12, 7);
     vertex(0, 11);
     vertex(12, 7);
-    vertex(9,-7);
-    vertex(0,-12);
-    vertex(-9,-7);
+    vertex(9, -7);
+    vertex(0, -12);
+    vertex(-9, -7);
     endShape(CLOSE);
     rotate(-1*dRadians);
     translate(-1*(float)myX, -1*(float)myY);
+  }
+  public void showStats() {
+    textSize(10);
+    text("Durability: " + myItem.getDura(), myX-20, myY + 30);
   }
   public Shield getItem() {
     return myItem;
@@ -34,19 +38,19 @@ class ShieldItemDrop implements CustomItemDropInterface {
   public void rotateItem() {
     myPointDirection += 1;
   }
-  public int getX(){
-  return myX;
+  public int getX() {
+    return myX;
   }
-  public int getY(){
-  return myY;
+  public int getY() {
+    return myY;
   }
-  public int getItemType(){
-  return 1;
+  public int getItemType() {
+    return 1;
   }
-  public boolean isPickedUp(){
-  return pickedUp;
+  public boolean isPickedUp() {
+    return pickedUp;
   }
-  public void setPickedUp(){
-  pickedUp = true;
+  public void setPickedUp() {
+    pickedUp = true;
   }
 }

@@ -14,7 +14,7 @@ class Section {
       createWall(1040, 5, 1920, 5);
       createMessage("Attack to open the chest and 'E' to equip", 50, 400);
       Chest newchest;
-      newchest = new Chest(new Shield(1, 10, 25, 500, 500), new Sword(3, 50, 250, 10, 500, 500), 100, 450);
+      newchest = new Chest(new Shield(1, 10, 25, 500, 500), new Sword(3, 50, 250, 50, 500, 500), 100, 450);
       Chests.add(newchest);
       createWall(0, 250, 100, 250);
       createWall(150, 250, 250, 250);
@@ -24,11 +24,12 @@ class Section {
       createWall(500, 350, 500, 500);
       createDoor(500, 250, 500, 350);
       createDoor(100, 250, 150, 250);
-     // SwordItemDrop item = new SwordItemDrop(new Sword(3, 50, 250, 5, 500, 500),100,300);
-   //   ShieldItemDrop item2 = new ShieldItemDrop(new Shield(3, 50, 5, 500, 500),200,300);
-     // items.add(item);
-     // items.add(item2);
-      for (int i = 0; i < 2; i++) {
+      createHouse(1200, 100);
+      // SwordItemDrop item = new SwordItemDrop(new Sword(3, 50, 250, 5, 500, 500),100,300);
+      //   ShieldItemDrop item2 = new ShieldItemDrop(new Shield(3, 50, 5, 500, 500),200,300);
+      // items.add(item);
+      // items.add(item2);
+      for (int i = 0; i < 20; i++) {
         Enemies.add(new Enemy(700, 300, 1));
       }
       Enemies.add(new EnemyBurst(600, 300, 5));
@@ -76,18 +77,32 @@ class Section {
       }
     }
   }
-  public void addItemS(Sword item,int x, int y){
-    SwordItemDrop itemN = new SwordItemDrop(item,x -30,y - 30);
-  items.add(itemN);
+  public void createHouse(int x, int y) {
+    createWall(x, y, x+600, y);
+    createWall(x+600, y, x+600, y+300);
+    createWall(x, y, x, y+300);
+    createWall(x, y+300, x+250, y+300);
+    createWall(x+350, y+300, x+600, y+300);
+    createDoor(x+250, y+300, x+350, y+300);
+    Chest newchest1;
+    Chest newchest2;
+    newchest1 = new Chest(new Shield(1, 10, 25 + 5*(int)(Math.random()*50), 500, 500), new Sword(50, 200, 5, 225, 500, 500), x+ 200 + (int)(Math.random()*100) - 50, y+150+ (int)(Math.random()*100) - 50);
+    newchest2 = new Chest(new Shield(1, 10, 25 + 5*(int)(Math.random()*50), 500, 500), new Sword(50, 200, 5, 225, 500, 500), x+ 400+ (int)(Math.random()*100) - 50, y+150+ (int)(Math.random()*100) - 50);
+    Chests.add(newchest1);
+    Chests.add(newchest2);
   }
-    public void addItemSh(Shield item,int x, int y){
-    ShieldItemDrop itemN = new ShieldItemDrop(item,x +30,y - 30);
-  items.add(itemN);
+  public void addItemS(Sword item, int x, int y) {
+    SwordItemDrop itemN = new SwordItemDrop(item, x -30, y - 30);
+    items.add(itemN);
+  }
+  public void addItemSh(Shield item, int x, int y) {
+    ShieldItemDrop itemN = new ShieldItemDrop(item, x +30, y - 30);
+    items.add(itemN);
   }
   public ArrayList<CustomMessage> getMessages() {
     return sText;
   }
-    public ArrayList<CustomItemDropInterface> getItems() {
+  public ArrayList<CustomItemDropInterface> getItems() {
     return items;
   }
   private void createMessage(String m, int x, int y) {

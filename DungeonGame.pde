@@ -5,6 +5,10 @@ boolean sKey = false;
 boolean qKey = false;
 boolean spaceKey = false;
 boolean ctrlKey = false;
+boolean comboing = false;
+boolean comboClick = false;
+int comboStage = 0;
+int[] comboArr = new int[3];
 ArrayList<ArrayList<Section>> Sections = new ArrayList<ArrayList<Section>>();
 Player playerOne;
 int sectionX;
@@ -44,10 +48,13 @@ void draw() {
     if (item.isPickedUp() == false) {
       item.show();
       item.rotateItem();
+      if (dist(playerOne.getX(), playerOne.getY(), item.getX(), item.getY()) < 600) {
+        item.showStats();
+      }
     }
   }
   if (spaceKey) {
-    playerOne.StartSwing();
+    playerOne.StartSwing1();
   }
   if (qKey) {
     playerOne.StartWhirlWind();
@@ -111,19 +118,17 @@ void draw() {
   for (GameObject playerPart : playerOne.getParts()) {
     playerPart.show();
     double tspeedPlayer = speedPlayer;
-    if (playerOne.checkSwingB() == false) {
-      if (wKey) {
-        playerPart.accelerateangle(tspeedPlayer, 270, ctrlKey);
-      }
-      if (aKey) {
-        playerPart.accelerateangle(tspeedPlayer, 180, ctrlKey);
-      }
-      if (sKey) {
-        playerPart.accelerateangle(tspeedPlayer, 90, ctrlKey);
-      }
-      if (dKey) {
-        playerPart.accelerateangle(tspeedPlayer, 0, ctrlKey);
-      }
+    if (wKey) {
+      playerPart.accelerateangle(tspeedPlayer, 270, ctrlKey);
+    }
+    if (aKey) {
+      playerPart.accelerateangle(tspeedPlayer, 180, ctrlKey);
+    }
+    if (sKey) {
+      playerPart.accelerateangle(tspeedPlayer, 90, ctrlKey);
+    }
+    if (dKey) {
+      playerPart.accelerateangle(tspeedPlayer, 0, ctrlKey);
     }
     playerPart.setPointDirection((int)angleR);
     playerPart.move();
@@ -154,13 +159,19 @@ void draw() {
   for (GameObject playerPart : playerOne.getParts()) {
     playerPart.slowdown();
   }
-  if (playerOne.checkSwing() == 2) {
+  if (playerOne.checkSwing()) {
     for (Enemy enemy : currentSection.getEnemies()) {
       if (enemy.getAlive()) {
-        if (playerOne.getHitHitBox().doesIntersect(enemy)) {
+        if (playerOne.getHitHitBox().doesIntersect(enemy)&&enemy.checkTakeDamage()) {
           enemy.takeDamage(playerOne.getSword().getDamage());
+          playerOne.loseSwDura();
           if (enemy.getAlive() == false) {
-            currentSection.addItemSh(new Shield(1, 10, 25, 500, 500), enemy.getX(), enemy.getY());
+            if (Math.random() > .9) {
+              currentSection.addItemSh(new Shield(1, 10, 25, 500, 500), enemy.getX(), enemy.getY());
+            }
+            if (Math.random() > .5) {
+              currentSection.addItemS(new Sword(5 + (int)(Math.random() * 3), 25 + (int)(Math.random() * 100), 100+ 10 * (int)(Math.random() * 5), 75 - 25 + (int)(Math.random() * 50), 500, 500), enemy.getX(), enemy.getY());
+            }
           }
         }
       }
@@ -179,17 +190,12 @@ void draw() {
       }
     }
   }
-  if (playerOne.checkSwing() == 1) {
-    for (Enemy enemy : currentSection.getEnemies()) {
-      enemy.removeInvunerability();
-    }
-    for (Chest newchest : currentSection.getChests()) {
-      if (dist(playerOne.getX(), playerOne.getY(), newchest.getX(), newchest.getY()) < 50) {
-        if (newchest.isOpened() == false) {
-          currentSection.addItemS(newchest.getSword(), newchest.getX(), newchest.getY());
-          currentSection.addItemSh(newchest.getShield(), newchest.getX(), newchest.getY());
-          newchest.setOpened();
-        }
+  for (Chest newchest : currentSection.getChests()) {
+    if (dist(playerOne.getX(), playerOne.getY(), newchest.getX(), newchest.getY()) < 50) {
+      if (newchest.isOpened() == false) {
+        currentSection.addItemS(newchest.getSword(), newchest.getX(), newchest.getY());
+        currentSection.addItemSh(newchest.getShield(), newchest.getX(), newchest.getY());
+        newchest.setOpened();
       }
     }
   }
@@ -197,6 +203,8 @@ void draw() {
     newchest.show();
   }
   for (CustomMessage message : currentSection.getMessages()) {
+    fill(0);
+    textSize(20);
     text(message.getMessage(), message.getX(), message.getY());
   }
   if (playerOne.getBody().getDirectionX() + playerOne.getX() > width - 5) {
@@ -223,8 +231,20 @@ void draw() {
   }
   playerOne.Swing();
   fill(0);
+  if (comboing) {
+    text(comboArr[0], 600, 400);
+    text(comboArr[1], 650, 400);
+    text(comboArr[2], 700, 400);
+  }
+  fill(0);
   textSize(20);
   text(sectionX, 100, 100);
+}
+public void endAttack() {
+  Section currentSection = Sections.get(sectionY).get(sectionX);
+  for (Enemy enemy : currentSection.getEnemies()) {
+    enemy.removeInvunerability();
+  }
 }
 void keyPressed() {
   Section currentSection = Sections.get(sectionY).get(sectionX);
@@ -244,22 +264,37 @@ void keyPressed() {
     qKey = true;
   }
   if (key == 'e' || key == 'E') {
+    boolean swordp = false;
+    boolean shieldp = false;
+    Sword tempsword = playerOne.getSword();
+    Shield tempshield= playerOne.getShield();
     for (CustomItemDropInterface item : currentSection.getItems()) {
       if (dist(playerOne.getX(), playerOne.getY(), item.getX(), item.getY()) < 35) {
         if (item.isPickedUp() == false) {
           if (item.getItemType() == 1) {
+            shieldp = true;
             playerOne.changeShield((Shield)item.getItem());
           } else if (item.getItemType() == 2) {
+            swordp = true;
             playerOne.changeSword((Sword)item.getItem());
           }
           item.setPickedUp();
         }
       }
     }
+    if (shieldp) {
+      if (!tempshield.getBroken()) {
+        currentSection.addItemSh(tempshield, playerOne.getX()+ 20, playerOne.getY()+50);
+      }
+    }
+    if (swordp) {
+      if (!(tempsword.getDura() <=0)) {
+        currentSection.addItemS(tempsword, playerOne.getX()+ 50, playerOne.getY()+50);
+      }
+    }
   }
   if (keyCode == SHIFT) {
     ctrlKey = true;
-    println("on");
   }
   if (key == 'x') {
     if (sectionX != 0) {
@@ -272,9 +307,34 @@ void keyPressed() {
 }
 void mousePressed() {
   spaceKey = true;
+  if (mouseButton == RIGHT && comboing == false) {
+    comboArr[0] = -1;
+    comboArr[1] = -1;
+    comboArr[2] = -1;
+    comboing = true;
+  }
+  if (comboing && comboClick == false) {
+    if (mouseButton == RIGHT) {
+      comboArr[comboStage] = 1;
+    }
+    if (mouseButton == LEFT) {
+      comboArr[comboStage] = 0;
+    }
+    comboStage++;
+    if (comboStage >= 3) {
+      text(comboArr[0], 600, 400);
+      text(comboArr[1], 650, 400);
+      text(comboArr[2], 700, 400);
+      comboing = false;
+      comboStage = 0;
+      playerOne.checkCombo(comboArr);
+    }
+    comboClick = true;
+  }
 }
 void mouseReleased() {
   spaceKey = false;
+  comboClick = false;
 }
 void keyReleased() {
   if (key == 'a' || key == 'A') {

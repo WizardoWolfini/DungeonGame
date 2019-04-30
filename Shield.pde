@@ -17,6 +17,9 @@ class Shield extends GameObject {
     myCenterX = myX;
     myCenterY = myY;
   }
+  public int getDura(){
+  return myDurability;
+  }
   public boolean getBroken(){
   return broken;
   }

@@ -3,7 +3,7 @@ class SwordItemDrop implements CustomItemDropInterface {
   private int myX;
   private int myY;
   private int myPointDirection;
-   private boolean pickedUp = false;
+  private boolean pickedUp = false;
   SwordItemDrop(Sword item, int inX, int inY) {
     myItem = item;
     myX = inX;
@@ -15,7 +15,7 @@ class SwordItemDrop implements CustomItemDropInterface {
     float dRadians = (float)(myPointDirection*(Math.PI/180));
     rotate(dRadians);
     noFill();
-    rect(-13, -13, 26, 26);
+    //rect(-13, -13, 26, 26);
     fill(0);
     beginShape();
     vertex(-13, -11);
@@ -28,12 +28,19 @@ class SwordItemDrop implements CustomItemDropInterface {
     vertex(9, 5);
     vertex(-3, -7);
     vertex(1, -11);
-    vertex(-1,-13);
-    vertex(-5,-9);
-    vertex(-11,-13);
+    vertex(-1, -13);
+    vertex(-5, -9);
+    vertex(-11, -13);
     endShape(CLOSE);
     rotate(-1*dRadians);
     translate(-1*(float)myX, -1*(float)myY);
+  }
+  public void showStats() {
+    textSize(10);
+    text("Durability: " + myItem.getDura() + " +" + (myItem.getDura() - playerOne.getSword().getDura()), myX-20, myY + 25);
+    text("Attack: " + myItem.getDamage() + " +" + (myItem.getDamage() - playerOne.getSword().getDamage()), myX-20, myY + 35);
+    text("SwingSpeed: " + myItem.getSs() + " +" + (myItem.getSs() - playerOne.getSword().getSs()), myX-20, myY + 45);
+    text("SwordLength: " + myItem.getSize() + " +" + (myItem.getSize() - playerOne.getSword().getSize()), myX-20, myY + 55);
   }
   public Sword getItem() {
     return myItem;
@@ -41,19 +48,19 @@ class SwordItemDrop implements CustomItemDropInterface {
   public void rotateItem() {
     myPointDirection += 1;
   }
-    public int getX(){
-  return myX;
+  public int getX() {
+    return myX;
   }
-  public int getY(){
-  return myY;
+  public int getY() {
+    return myY;
   }
-    public int getItemType(){
-  return 2;
+  public int getItemType() {
+    return 2;
   }
-    public boolean isPickedUp(){
-  return pickedUp;
+  public boolean isPickedUp() {
+    return pickedUp;
   }
-  public void setPickedUp(){
-  pickedUp = true;
+  public void setPickedUp() {
+    pickedUp = true;
   }
 }

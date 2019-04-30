@@ -6,7 +6,7 @@ class Player {
   private ArrayList<GameObject> myParts = new ArrayList<GameObject>();
   Player(int myX, int myY) {
     myBody = new Body(myX, myY);
-    mySword = new Sword(1, 25, 250, 5, myX, myY);
+    mySword = new Sword(1, 25, 250, 50, myX, myY);
     myShield = new Shield(1, 10, 0, myX, myY);
     myHitHitbox = new PlayerSwingHitbox(myX, myY);
     myShield.shieldBreak();
@@ -15,11 +15,17 @@ class Player {
     myParts.add(myShield);
     myParts.add(myHitHitbox);
   }
+  public void changeSwordWhirlHB(int inLength) {
+    myHitHitbox.changeSwordWhirlHB(inLength);
+  }
   public boolean getShieldStatus() {
     return myShield.getBroken();
   }
   public boolean doesBodyIntersect(EnemyArrow arrow) {
     return myBody.doesIntersect(arrow);
+  }
+  public void loseSwDura(){
+  mySword.loseDura();
   }
   public void getHitArrow(EnemyArrow arrow) {
     for (GameObject part : myParts) {
@@ -47,8 +53,17 @@ class Player {
     myHitHitbox.changeSwordSize(intLength);
     mySword.changeSwordSize(intLength);
   }
-  public void StartSwing() {
-    mySword.StartSwing();
+  public void changeSwordDura(int dura) {
+    mySword.changeDura(dura);
+  }
+  public void StartSwing1() {
+    mySword.StartSwing1();
+  }
+  public void checkCombo(int [] a) {
+    mySword.checkCombo(a);
+  }
+  public double getPointDirection() {
+    return myBody.getPointDirection();
   }
   public void Swing() {
     mySword.Swing();
@@ -56,7 +71,7 @@ class Player {
   public void StartWhirlWind() {
     mySword.StartWhirlWind();
   }
-  public int checkSwing() {
+  public boolean checkSwing() {
     return mySword.checkSwing();
   }
   public boolean checkSwingB() {
@@ -93,6 +108,7 @@ class Player {
     mySword.setX(getX());
     mySword.setY(getY());
     changeSwordSize(mySword.getSize());
+    changeSwordDura(mySword.getDura());
   }
   public void changeShield(Shield inShield) {
     double tempX = myShield.getDirectionX();
