@@ -2,11 +2,13 @@ class Player {
   private Shield myShield;
   private Sword mySword;
   private Body myBody;
+  private HealthBar hpb;
   private PlayerSwingHitbox myHitHitbox;
   private ArrayList<GameObject> myParts = new ArrayList<GameObject>();
   Player(int myX, int myY) {
+    hpb = new HealthBar(myX, myY, 100, 10, 10);
     myBody = new Body(myX, myY);
-    mySword = new Sword(1, 25, 250, 50, myX, myY);
+    mySword = new Sword(1, 25, 250, 50, myX, myY, "Starter Sword");
     myShield = new Shield(1, 10, 0, myX, myY);
     myHitHitbox = new PlayerSwingHitbox(myX, myY);
     myShield.shieldBreak();
@@ -24,14 +26,11 @@ class Player {
   public boolean doesBodyIntersect(EnemyArrow arrow) {
     return myBody.doesIntersect(arrow);
   }
-  public void loseSwDura(){
-  mySword.loseDura();
+  public void loseSwDura() {
+    mySword.loseDura();
   }
   public void getHitArrow(EnemyArrow arrow) {
-    for (GameObject part : myParts) {
-      part.setDirectionX(part.getDirectionX() + arrow.getDirectionX());
-      part.setDirectionY(part.getDirectionY() + arrow.getDirectionY());
-    }
+    hpb.damage(1);
   }
   public void addArrow(EnemyArrow arrow) {
     myShield.addArrow(arrow);
@@ -42,6 +41,42 @@ class Player {
   }
   public boolean doesShieldIntersect(EnemyArrow arrow) {
     return myShield.doesIntersect(arrow);
+  }
+  public void accelerate() {
+    double distx = playerOne.getBody().getX() - mouseX;
+    double angleR = 0;
+    double angletemp = Math.acos(distx/dist((float)playerOne.getBody().getX(), (float)playerOne.getBody().getY(), (float)mouseX, (float)mouseY));
+    if (playerOne.getY() - mouseY >= 0) {
+      angleR = 180 + angletemp *180/Math.PI;
+    } else {
+      angleR = 180 - angletemp * 180 / Math.PI;
+    }
+    double speedPlayer = 2;
+    boolean moving = false;
+    for (GameObject playerPart : getParts()) {
+      playerPart.show();
+      double tspeedPlayer = speedPlayer;
+      playerPart.setDirectionX(0);
+      playerPart.setDirectionY(0);
+      if (wKey) {
+        playerPart.accelerateangle(tspeedPlayer, 270, ctrlKey);
+      }
+      if (aKey) {
+        playerPart.accelerateangle(tspeedPlayer, 180, ctrlKey);
+      }
+      if (sKey) {
+        playerPart.accelerateangle(tspeedPlayer, 90, ctrlKey);
+      }
+      if (dKey) {
+        playerPart.accelerateangle(tspeedPlayer, 0, ctrlKey);
+      }
+      playerPart.setPointDirection((int)angleR);
+      if ((wKey || aKey || sKey || dKey)) {
+        playerPart.move();
+      }
+    }
+    hpb.show();
+    hpb.setPos(getX(), getY());
   }
   public void shieldMoveArrows() {
     myShield.moveArrows();

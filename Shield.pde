@@ -35,7 +35,7 @@ class Shield extends GameObject {
     }
   }
   public void show() {
-    if (broken == false) {
+    if (broken == false && ctrlKey) {
       super.show();
        //myColor = 0;
     } else {
@@ -44,7 +44,9 @@ class Shield extends GameObject {
   }
   public void moveArrows() {
     for (HitArrow arrow : hitArrows) {
+      if(ctrlKey){
       arrow.show();
+      }
       arrow.move();
 
     }

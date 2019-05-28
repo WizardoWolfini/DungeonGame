@@ -97,7 +97,7 @@ class GameObject
     }
   }
     public void accelerateangle (double dAmount, int degree,boolean t) {
-      if(t){
+      if(!t){
     double dRadians =(degree)*(Math.PI/180); 
     myDirectionX += ((dAmount) *  4 * Math.cos(dRadians));
     myDirectionY += ((dAmount) * 4 * Math.sin(dRadians));

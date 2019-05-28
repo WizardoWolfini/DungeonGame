@@ -15,7 +15,11 @@ class Sword extends GameObject {
   private boolean SW1 = false;
   private boolean SW2 = false;
   private boolean SC1 = false;
-  Sword(int intDamage, int intLength, int intDurability, int sS, int myX, int myY) {
+  private String myName;
+  private int dash;
+  private double dD = 0;
+  Sword(int intDamage, int intLength, int intDurability, int sS, int myX, int myY, String name) {
+    myName = name;
     swingSpeed = sS;
     myDamage = intDamage;
     myLength = intLength;
@@ -47,8 +51,11 @@ class Sword extends GameObject {
   public int getDamage() {
     return myDamage;
   }
-  public int getSs(){
-  return swingSpeed;
+  public int getSs() {
+    return swingSpeed;
+  }
+  public String getname() {
+    return myName;
   }
   public void loseDura() {
     myDurability--;
@@ -67,8 +74,7 @@ class Sword extends GameObject {
         swingStage = 0;
         SW1 = true;
         isAttacking = true;
-      }
-      if (startSwing2) {
+      } else if (startSwing2) {
         combo = 5;
         swingStage = 0;
         SW2 = true;
@@ -95,6 +101,8 @@ class Sword extends GameObject {
     }
     if (checkArrs(a, combo2)) {
       startSwing3 = true;
+      dash = 30;
+      dD = playerOne.getPointDirection();
     }
   }
   public boolean checkArrs(int[]a, int[] b) {
@@ -181,11 +189,32 @@ class Sword extends GameObject {
     }
   }
   public void swingCombo1() {
+    Section currentSection = Sections.get(sectionY).get(sectionX);
     for (GameObject part : playerOne.getParts()) {
-      part.setDirectionX(20 *Math.cos(myPointDirection * Math.PI/180));
-      part.setDirectionY(20 *Math.sin(myPointDirection * Math.PI/180));
+      part.setDirectionX((10 + dash/3) *Math.cos(dD * Math.PI/180));
+      part.setDirectionY((10 + dash/3) *Math.sin(dD * Math.PI/180));
+      part.move();
     }
-    startSwing3 = false;
+    for (GameWall wall : currentSection.getWalls()) {
+      if (wall.doesIntersect(playerOne.getBody())) {
+        double[] newSpeeds = wall.wallSlide(playerOne.getBody());
+        for (GameObject playerPart : playerOne.getParts()) {
+          playerPart.moveBack();
+          playerPart.setDirectionX(newSpeeds[0]);
+          playerPart.setDirectionY(newSpeeds[1]);
+          playerPart.move();
+          dash = 0;
+        }
+        for (HitArrow arrow : playerOne.getShield().getHitArrows()) {
+          arrow.moveBack();
+        }
+      }
+    }
+    dash--;
+    if (dash <= 0) { 
+      dash = 0;
+      startSwing3 = false;
+    }
   }
   public void StartWhirlWind() {
     //if (onWCd == 0) {

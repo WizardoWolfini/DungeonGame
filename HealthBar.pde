@@ -22,14 +22,21 @@ class HealthBar {
     fill(255, 0, 0);
     rect(myX - myLength/2 + 2, myY + 26 + myWidth, hp*(myLength - 4)/maxhp, myWidth - 2);
   }
+  public void setPos(double x, double y) {
+    myX = (float)x;
+    myY =  (float)y;
+  }
   public void move(float x, float y) {
     myX += x;
     myY += y;
   }
-  public void damage(int d){
-  hp-=d;
+  public void damage(int d) {
+    hp-=d;
+    if(hp < 0){
+    hp = 0;
+    }
   }
-  public int getHp(){
-  return hp;
+  public int getHp() {
+    return hp;
   }
 }

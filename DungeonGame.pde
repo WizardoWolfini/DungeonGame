@@ -8,6 +8,7 @@ boolean ctrlKey = false;
 boolean comboing = false;
 boolean comboClick = false;
 int comboStage = 0;
+int stepcounter = 0;
 int[] comboArr = new int[3];
 ArrayList<ArrayList<Section>> Sections = new ArrayList<ArrayList<Section>>();
 Player playerOne;
@@ -40,7 +41,7 @@ void setup() {
 }
 void draw() {
   Section currentSection = Sections.get(sectionY).get(sectionX);
-  background(127);
+  background(50,80,50);
   double distx = playerOne.getBody().getX() - mouseX;
   double angleR = 0;
   double angletemp = Math.acos(distx/dist((float)playerOne.getBody().getX(), (float)playerOne.getBody().getY(), (float)mouseX, (float)mouseY));
@@ -73,7 +74,7 @@ void draw() {
     playerOne.shieldBreak();
     for (EnemyArrow arrow : enemy.getArrows()) {
       arrow.move();
-      if (playerOne.doesShieldIntersect(arrow)) {
+      if (playerOne.doesShieldIntersect(arrow) && ctrlKey) {
         if (arrow.getAlive() && !playerOne.getShieldStatus()) {
           playerOne.addArrow(arrow);
           arrow.kill();
@@ -115,24 +116,7 @@ void draw() {
       ((GameDoor)wall).CloseUp();
     }
   }
-  for (GameObject playerPart : playerOne.getParts()) {
-    playerPart.show();
-    double tspeedPlayer = speedPlayer;
-    if (wKey) {
-      playerPart.accelerateangle(tspeedPlayer, 270, ctrlKey);
-    }
-    if (aKey) {
-      playerPart.accelerateangle(tspeedPlayer, 180, ctrlKey);
-    }
-    if (sKey) {
-      playerPart.accelerateangle(tspeedPlayer, 90, ctrlKey);
-    }
-    if (dKey) {
-      playerPart.accelerateangle(tspeedPlayer, 0, ctrlKey);
-    }
-    playerPart.setPointDirection((int)angleR);
-    playerPart.move();
-  }
+  playerOne.accelerate();
   for (HitArrow arrow : playerOne.getShield().getHitArrows()) {
     arrow.setDirectionX(playerOne.getBody().getDirectionX());
     arrow.setDirectionY(playerOne.getBody().getDirectionY());
@@ -149,7 +133,7 @@ void draw() {
         playerPart.moveBack();
         playerPart.setDirectionX(newSpeeds[0]);
         playerPart.setDirectionY(newSpeeds[1]);
-        playerPart.move();
+       playerPart.move();
       }
       for (HitArrow arrow : playerOne.getShield().getHitArrows()) {
         arrow.moveBack();
@@ -170,7 +154,7 @@ void draw() {
               currentSection.addItemSh(new Shield(1, 10, 25, 500, 500), enemy.getX(), enemy.getY());
             }
             if (Math.random() > .5) {
-              currentSection.addItemS(new Sword(5 + (int)(Math.random() * 3), 25 + (int)(Math.random() * 100), 100+ 10 * (int)(Math.random() * 5), 75 - 25 + (int)(Math.random() * 50), 500, 500), enemy.getX(), enemy.getY());
+              currentSection.addItemS(new Sword(5 + (int)(Math.random() * 3), 25 + (int)(Math.random() * 100), 100+ 10 * (int)(Math.random() * 5), 75 - 25 + (int)(Math.random() * 50), 500, 500,"Basic Iron Sword"), enemy.getX(), enemy.getY());
             }
           }
         }
@@ -261,7 +245,9 @@ void keyPressed() {
     wKey = true;
   }
   if (key == 'q' || key == 'Q') {
-    qKey = true;
+    int[] ca = {1,0,1};
+    comboArr = ca;
+    playerOne.checkCombo(ca);
   }
   if (key == 'e' || key == 'E') {
     boolean swordp = false;
@@ -271,25 +257,26 @@ void keyPressed() {
     for (CustomItemDropInterface item : currentSection.getItems()) {
       if (dist(playerOne.getX(), playerOne.getY(), item.getX(), item.getY()) < 35) {
         if (item.isPickedUp() == false) {
-          if (item.getItemType() == 1) {
+          if (item.getItemType() == 1 && shieldp == false) {
             shieldp = true;
             playerOne.changeShield((Shield)item.getItem());
-          } else if (item.getItemType() == 2) {
+            item.setPickedUp();
+          } else if (item.getItemType() == 2 && swordp == false) {
             swordp = true;
             playerOne.changeSword((Sword)item.getItem());
+            item.setPickedUp();
           }
-          item.setPickedUp();
         }
       }
     }
     if (shieldp) {
       if (!tempshield.getBroken()) {
-        currentSection.addItemSh(tempshield, playerOne.getX()+ 20, playerOne.getY()+50);
+        currentSection.addItemSh(tempshield, playerOne.getX()+ (int)(20*Math.random()), playerOne.getY()+(int)(50*Math.random()));
       }
     }
     if (swordp) {
       if (!(tempsword.getDura() <=0)) {
-        currentSection.addItemS(tempsword, playerOne.getX()+ 50, playerOne.getY()+50);
+        currentSection.addItemS(tempsword, playerOne.getX()+ (int)(50*Math.random()), playerOne.getY()+(int)(50*Math.random()));
       }
     }
   }

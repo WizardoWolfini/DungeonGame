@@ -36,11 +36,14 @@ class SwordItemDrop implements CustomItemDropInterface {
     translate(-1*(float)myX, -1*(float)myY);
   }
   public void showStats() {
+    fill(255,150,80);
     textSize(10);
-    text("Durability: " + myItem.getDura() + " +" + (myItem.getDura() - playerOne.getSword().getDura()), myX-20, myY + 25);
-    text("Attack: " + myItem.getDamage() + " +" + (myItem.getDamage() - playerOne.getSword().getDamage()), myX-20, myY + 35);
-    text("SwingSpeed: " + myItem.getSs() + " +" + (myItem.getSs() - playerOne.getSword().getSs()), myX-20, myY + 45);
-    text("SwordLength: " + myItem.getSize() + " +" + (myItem.getSize() - playerOne.getSword().getSize()), myX-20, myY + 55);
+    text("Durability: " + myItem.getDura() + " +" + (myItem.getDura() - playerOne.getSword().getDura()), myX-40, myY + 25);
+    text("Attack: " + myItem.getDamage() + " +" + (myItem.getDamage() - playerOne.getSword().getDamage()), myX-40, myY + 35);
+    text("SwingSpeed: " + myItem.getSs() + " +" + (myItem.getSs() - playerOne.getSword().getSs()), myX-40, myY + 45);
+    text("SwordLength: " + myItem.getSize() + " +" + (myItem.getSize() - playerOne.getSword().getSize()), myX-40, myY + 55);
+    textSize(10);
+    text(myItem.getname(), myX-45, myY - 25);
   }
   public Sword getItem() {
     return myItem;
